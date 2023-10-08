@@ -2,6 +2,17 @@
 
 This project is aimed at running a homelab on an old Android phone using Termux. It includes several components such as Airflow, some automation tools written in Rust, and a dashboard for monitoring things.
 
+<table>
+    <tr>
+        <td>
+            <img src="./screenshot/_DSC3625.png" />
+        </td>
+        <td>
+            <img src="./screenshot/_DSC3637.png" />
+        </td>
+    </tr>
+</table>
+
 # Installation
 
 To install the project, please refer to the scripts folder. It contains all the necessary scripts and instructions for setting up the components.
