@@ -1,6 +1,8 @@
-# Homelab Project with Termux
+# Homelab Project
 
-This project is aimed at running a homelab on an old Android phone using Termux. It includes several components such as Airflow, some automation tools written in Rust, and a dashboard for monitoring things.
+This personal project is aimed at running a homelab on my Raspberry Pi and old Android phone. It includes several components such as Airflow, some automation tools written in Rust, and a dashboard for monitoring things.
+
+Most of the configuration files and data schema are open and can be found in the this repo.
 
 <table>
     <tr>
@@ -18,18 +20,19 @@ This project is aimed at running a homelab on an old Android phone using Termux.
 ## Option 1: Termux on your old Android Phone
 
 - Install Termux
-- Install Deb on Termux: https://github.com/sp4rkie/debian-on-termux
-- Refer to the scripts folder. It contains all the necessary scripts and instructions for setting up the components.
+- Install Deb on Termux by following the instructions in [this repository](https://github.com/sp4rkie/debian-on-termux).
+- Refer to the scripts folder for all the necessary scripts and instructions to set up the components.
 
-## Option 2: MacOS - Docker Compose
-
-- Put this project to iCloud Drive so data mount at `./icloud` (ignored by `.gitignore`) can be backup automatically.
-- Recommended using https://orbstack.dev for lightweight docker.
+## Option 2: Raspberry Pi/MiniPC/MacOS - Docker Compose
 
 ```bash
 docker-compose up
 ```
 
+For MacOS:
+
+- Put this project to **iCloud Drive** so data mount at `./icloud` (ignored by `.gitignore`) can be backup automatically.
+- Recommended using https://orbstack.dev for lightweight docker.
 
 # Components
 
