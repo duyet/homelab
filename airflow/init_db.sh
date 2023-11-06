@@ -1,9 +1,9 @@
-. ./start.sh
+. ./env.sh
 
 airflow db migrate
 
 airflow users create \
-    --username admin \
+    --username duyet \
     --firstname Duyet \
     --lastname Le \
     --role Admin \

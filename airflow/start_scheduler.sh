@@ -1,2 +1,2 @@
-. ./start.sh
+. ./env.sh
 airflow scheduler
