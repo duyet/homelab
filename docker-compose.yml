@@ -1,7 +1,7 @@
 version: '3'
 
 x-airflow-common: &airflow-common
-  image: apache/airflow:2.7.2
+  image: apache/airflow:2.7.3
   user: root
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
