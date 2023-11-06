@@ -1,8 +1,10 @@
 set -x
 
-echo NOTE: Installing Python ...
-echo NOTE: Rust is needed for some deps building ... 
-pkg install python python-static rust rustc-dev
+. ../install_deb.sh
 
-export CARGO_BUILD_JOBS=1
+apt install python3 python3-pip python3-venv
 pip3 install -r requirements.txt
+
+export AIRFLOW_HOME=$(pwd)
+
+airflow standalone

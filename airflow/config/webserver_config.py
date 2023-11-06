@@ -1,0 +1,1 @@
+AUTH_ROLE_ADMIN = 'Admin'
