@@ -1,9 +1,10 @@
 import requests
-import pendulum
+from pendulum import now
+from datetime import timedelta
 from airflow.decorators import dag, task
 
 
-@dag(start_date=pendulum.now(), schedule="@hourly", catchup=False)
+@dag(start_date=now(), schedule=timedelta(minutes=10), catchup=False)
 def healthcheck():
     @task()
     def ping():

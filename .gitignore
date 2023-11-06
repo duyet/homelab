@@ -1,1 +1,6 @@
 icloud
+__pycache__
+*.pyc
+*.pid
+*.db
+venv

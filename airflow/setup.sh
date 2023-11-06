@@ -5,6 +5,4 @@ set -x
 apt install python3 python3-pip python3-venv
 pip3 install -r requirements.txt
 
-export AIRFLOW_HOME=$(pwd)
-
-airflow standalone
+. ./start.sh
