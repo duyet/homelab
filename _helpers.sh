@@ -17,7 +17,7 @@ function ensure_installed () {
 
 function create_namespace () {
   namespace=${NAMESPACE:-$1}
-  $kubectl create namespace $namespace && echo "Namespace `$namespace` created" || true
+  $kubectl create namespace $namespace --dry-run=client -o yaml --save-config | $kubectl apply -f -
 }
 
 function kubectl_apply () {
@@ -26,14 +26,21 @@ function kubectl_apply () {
   $kubectl apply --namespace $namespace -f $file
 }
 
-function print_loaded () {
-  echo "utils.sh loaded"
+
+function kubectl_delete () {
+  file=$1
+  namespace=${NAMESPACE}
+  $kubectl delete --namespace $namespace -f $file
 }
 
-function print_current_namespace () {
-  namespace=$($kubectl config view --minify --output 'jsonpath={..namespace}')
-  echo Current namespace: $namespace
+function set_current_namespace () {
+  name=$1
+  $kubectl config set-context --current --namespace=$name
+  current=$($kubectl config view --minify --output 'jsonpath={..namespace}')
+  echo Current namespace: $current
 }
 
-print_loaded
-print_current_namespace
+function set_working_dir () {
+  cd "$(dirname "$1")"
+  echo Current working directory: $(pwd)
+}

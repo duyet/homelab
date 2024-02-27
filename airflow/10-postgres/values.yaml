@@ -1,0 +1,22 @@
+## @section PostgreSQL Primary parameters
+##
+primary:
+  ## PostgreSQL Primary persistence configuration
+  ##
+  persistence:
+    ## @param primary.persistence.enabled Enable PostgreSQL Primary data persistence using PVC
+    ##
+    enabled: true
+    ## @param primary.persistence.existingClaim Name of an existing PVC to use
+    ##
+    existingClaim: postgres-airflow
+
+  ## pgHbaConfiguration: |-
+  ##   local all all trust
+  ##   host all all localhost trust
+  ##   host mydatabase mysuser 192.168.0.0/24 md5
+  pgHbaConfiguration: |-
+    local all all trust
+    host all all 0.0.0.0/0 trust
+    hostnossl all all 0.0.0.0/0 trust
+

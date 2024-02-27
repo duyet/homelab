@@ -1,0 +1,39 @@
+config:
+  webserver:
+    expose_config: 'True'
+
+secret:
+  - envName: POSTGRES_PASSWORD
+    secretName: postgres-airflow-postgresql
+    secretKey: postgres-password
+
+postgresql:
+  enabled: false
+
+fernetKeySecretName: airflow-metadata
+
+data:
+  metadataSecretName: airflow-metadata
+
+# Airflow Triggerer Config
+triggerer:
+  enabled: false
+
+workers:
+  persistence:
+    enabled: false
+
+# Git sync
+dags:
+  persistence:
+    enabled: true
+
+    # 20-airflow-pvc.yaml
+    existingClaim: airflow
+
+    # TODO: Git sync
+
+logs:
+  persistence:
+    enabled: true
+    size: 10Gi
