@@ -1,0 +1,4 @@
+# https://github.com/Altinity/clickhouse-operator/blob/master/deploy/helm/values.yaml
+
+metrics:
+  enabled: true
