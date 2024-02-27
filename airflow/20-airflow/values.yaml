@@ -19,6 +19,15 @@ data:
 triggerer:
   enabled: false
 
+ingress:
+  web:
+    enabled: true
+    ingressClassName: tailscale
+    hosts:
+      - name: airflow.duet-ubuntu.duyet.net
+        tls:
+          enabled: true
+
 workers:
   persistence:
     enabled: false
