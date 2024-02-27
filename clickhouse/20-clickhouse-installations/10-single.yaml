@@ -1,0 +1,15 @@
+apiVersion: clickhouse.altinity.com/v1
+kind: ClickHouseInstallation
+metadata:
+  name: single
+  namespace: clickhouse
+spec:
+  configuration:
+    users:
+      # printf 'test_password' | sha256sum
+      duyet/password_sha256_hex: a6d8a792566027f491147d7a93c82e414415ce964c67b9d7d5c0f41dc6076d7f
+      # to allow access outside from kubernetes
+      duyet/networks/ip:
+        - 0.0.0.0/0
+    clusters:
+      - name: single
