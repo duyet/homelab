@@ -42,7 +42,11 @@ $ ./apply.sh --delete
 
 ## Tailscale
 
-Create the secret contains the Tailscale OAuth token before applying.
+Tailscale is using for expose the services to your personal network. See more details at https://tailscale.com/use-cases/homelab/.
+
+![Tailscale](https://cdn.sanity.io/images/w77i7m8x/production/f9b5146698a52866f936a4e6d4306e0906bf8cbc-1280x657.svg?w=1920&q=75&fit=clip&auto=format)
+
+Make sure to create the secret contains the Tailscale OAuth token before applying.
 
 ```yaml
 # File: tailscale/10-tailscale-operator/tailscale-secret.yaml
@@ -83,6 +87,8 @@ The password to access the web UI is `123123` as the `WEBPASSWORD` variable.
 Most of the PV using hostPath storageClass pointing to `/media/duyet/Data/k8s-data` so you might need to change it to your own path.
 
 See: [./airflow/10-postgres/10-postgres-airflow-sc.yaml](./airflow/10-postgres/10-postgres-airflow-sc.yaml)
+
+Access the Airflow Webserver using NodeIP: http://localhost:30000
 
 # License
 
