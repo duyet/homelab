@@ -11,28 +11,50 @@ postgresql:
   enabled: false
 
 fernetKeySecretName: airflow-metadata
+webserverSecretKeySecretName: airflow-metadata
 
 data:
   metadataSecretName: airflow-metadata
 
-# Airflow Triggerer Config
 triggerer:
   enabled: false
 
-ingress:
-  web:
+# Enable RBAC (default on most clusters these days)
+rbac:
+  create: false
+
+# Airflow executor
+# One of: LocalExecutor, LocalKubernetesExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
+executor: "LocalExecutor"
+
+webserver:
+  # Create initial user.
+  defaultUser:
     enabled: true
-    ingressClassName: tailscale
-    hosts:
-      - name: airflow.duet-ubuntu.duyet.net
-        tls:
-          enabled: true
+    role: Admin
+    username: duyet
+    email: me@duyet.net
+    firstName: Duyet
+    lastName: Le
+    password: "123123"
+
+  # Access: http://duet-ubuntu:30000
+  service:
+    type: NodePort
+    annotations:
+      tailscale.com/expose: "true"
+      tailscale.com/hostname: "airflow"
+      tailscale.com/tags: "tag:k8s,tag:minipc,tag:duet-ubuntu"
+    ports:
+      - name: airflow-ui
+        port: 8080
+        targetPort: airflow-ui
+        nodePort: 30000
 
 workers:
   persistence:
     enabled: false
 
-# Git sync
 dags:
   persistence:
     enabled: true
