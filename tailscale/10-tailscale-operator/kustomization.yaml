@@ -16,4 +16,4 @@ helmCharts:
         defaultTags: 'tag:k8s,tag:duet-ubuntu,tag:minipc'
 
 resources:
-  - ./tailscale-operator-secret.yaml
+  - ./tailscale-secret.yaml

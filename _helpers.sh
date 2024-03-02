@@ -1,7 +1,28 @@
 #!/bin/bash
 
-helm="microk8s.helm3"
-kubectl="microk8s.kubectl"
+# Helm command
+if command -v microk8s.helm3 &> /dev/null; then
+  helm="microk8s.helm3"
+elif command -v helm &> /dev/null; then
+  helm="helm"
+else
+  echo "Helm could not be found"
+  echo "Trying to install Helm"
+  sudo snap install helm --classic
+  helm="helm"
+fi
+
+# Kubectl command
+if command -v microk8s.kubectl &> /dev/null; then
+  kubectl="microk8s.kubectl"
+elif command -v kubectl &> /dev/null; then
+  kubectl="kubectl"
+else
+  echo "Kubectl could not be found"
+  echo "Trying to install Kubectl"
+  sudo snap install kubectl --classic
+  kubectl="kubectl"
+fi
 
 # Check if command is exist or not, if not try to install it
 function ensure_installed () {
@@ -31,6 +52,26 @@ function kubectl_delete () {
   file=$1
   namespace=${NAMESPACE}
   $kubectl delete --namespace $namespace -f $file
+}
+
+function kustomize_apply () {
+  location=$1
+  args=${@:2}
+  helmcmd=$helm
+
+  # Contains --delete flag
+  if [[ " ${args[@]} " =~ " --delete " ]]; then
+    $kubectl kustomize \
+      --enable-helm \
+      --helm-command=$helmcmd \
+      $location | $kubectl delete -f -
+    return
+  fi
+
+  $kubectl kustomize \
+    --enable-helm \
+    --helm-command=$helmcmd \
+    $location | $kubectl apply -f -
 }
 
 function set_current_namespace () {
