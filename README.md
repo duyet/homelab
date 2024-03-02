@@ -5,6 +5,13 @@ It includes several components such as Airflow, some automation tools written in
 
 Most of the configuration files and data schema are open and can be found in the this repo.
 
+<table>
+  <tr>
+    <td><img src="https://i.imgur.com/ZmAd1Zz.jpeg" /></td>
+    <td><img src="https://i.imgur.com/FrbfltR.jpeg" /></td>
+  </tr>
+</table>
+
 # How to run
 
 Apply the setup script to install the services on each Kubernetes namespace.
@@ -40,7 +47,7 @@ $ ./apply.sh --delete
 
 # Notes
 
-## Tailscale
+### Tailscale
 
 Tailscale is using for expose the services to your personal network. See more details at https://tailscale.com/use-cases/homelab/.
 
@@ -66,7 +73,7 @@ cd ./tailscale
 ./apply.sh
 ```
 
-## PiHole
+### PiHole
 
 I don't use DHCP service from PiHole, so you might need to assign the IP to host name manually for your devices to display in the UI.
 
@@ -82,7 +89,7 @@ Update the `hostAliases` in [pihole/40-statefulset.yaml](./pihole/40-statefulset
 
 The password to access the web UI is `123123` as the `WEBPASSWORD` variable.
 
-## Airflow
+### Airflow
 
 Most of the PV using hostPath storageClass pointing to `/media/duyet/Data/k8s-data` so you might need to change it to your own path.
 
