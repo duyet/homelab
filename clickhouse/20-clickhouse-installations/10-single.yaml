@@ -4,12 +4,44 @@ metadata:
   name: single
   namespace: clickhouse
 spec:
+  defaults:
+    templates:
+      serviceTemplate: svc-template
+
   configuration:
-    users:
-      # printf 'test_password' | sha256sum
-      duyet/password_sha256_hex: a6d8a792566027f491147d7a93c82e414415ce964c67b9d7d5c0f41dc6076d7f
-      # to allow access outside from kubernetes
-      duyet/networks/ip:
-        - 0.0.0.0/0
     clusters:
       - name: single
+
+    users:
+      default/password_sha256_hex: 37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f
+      default/networks/ip:
+        - 0.0.0.0/0
+
+      duyet/password_sha256_hex: a6d8a792566027f491147d7a93c82e414415ce964c67b9d7d5c0f41dc6076d7f
+      duyet/networks/ip:
+        - 0.0.0.0/0
+
+      monitoring/profile: readonly
+      monitoring/password_sha256_hex: 14a2326b6bb54f4045dad6bee6f667f64f143e354a6aa77f4bdb5f6ed19ca167
+      monitoring/networks/ip:
+        - 10.1.0.0/16
+
+    profiles:
+      readonly/readonly: "1"
+
+  templates:
+    serviceTemplates:
+      - name: svc-template
+        generateName: clickhouse-{chi}
+        metadata:
+          annotations:
+            tailscale.com/expose: "true"
+            tailscale.com/hostname: "clickhouse-single"
+            tailscale.com/tags: "tag:k8s,tag:minipc,tag:duet-ubuntu"
+        spec:
+          ports:
+            - name: http
+              port: 8123
+            - name: tcp
+              port: 9000
+          type: ClusterIP
