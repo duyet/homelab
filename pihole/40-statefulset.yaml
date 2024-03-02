@@ -1,15 +1,15 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: pihole
   namespace: pihole
   labels:
     app: pihole
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: pihole
+  serviceName: pihole
   template:
     metadata:
       labels:
@@ -21,6 +21,27 @@ spec:
         nameservers:
           # upstream DNS used by pihole.
           - 1.1.1.1
+          - 1.0.0.1
+      # Assign IP address to the device name.
+      hostAliases:
+        - ip: 192.168.1.69
+          hostnames: [duet-mac]
+        - ip: 192.168.1.70
+          hostnames: [duet-iphone]
+        - ip: 192.168.1.10
+          hostnames: [dqsmart]
+        - ip: 192.168.1.110
+          hostnames: [duet-ubuntu]
+        - ip: 192.168.1.200
+          hostnames: [bosch-dishwasher]
+        - ip: 192.168.1.201
+          hostnames: [lg-smart-dryer]
+        - ip: 192.168.1.202
+          hostnames: [lg-washing-machine]
+        - ip: 192.168.1.203
+          hostnames: [duet-samsung-tv]
+        - ip: 192.168.1.204
+          hostnames: [duet-camera]
       containers:
         - name: pihole
           # https://hub.docker.com/r/pihole/pihole/tags
@@ -51,13 +72,11 @@ spec:
               mountPath: /etc/pihole
             - name: pihole-dnsmasq
               mountPath: /etc/dnsmasq.d
-          # resources:
-          #   requests:
-          #     memory: 128Mi
-          #     cpu: 100m
-          #   limits:
-          #     memory: 2Gi
-          #     cpu: 1
+          resources:
+            requests:
+            limits:
+              memory: 1Gi
+              cpu: 1
       volumes:
         - name: pihole-etc
           persistentVolumeClaim:
