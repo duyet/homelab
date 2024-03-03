@@ -25,7 +25,7 @@ rbac:
 
 # Airflow executor
 # One of: LocalExecutor, LocalKubernetesExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
-executor: "LocalExecutor"
+executor: "KubernetesExecutor"
 
 webserver:
   # Create initial user.
@@ -45,11 +45,11 @@ webserver:
       tailscale.com/expose: "true"
       tailscale.com/hostname: "airflow"
       tailscale.com/tags: "tag:k8s,tag:minipc,tag:duet-ubuntu"
-    ports:
-      - name: airflow-ui
-        port: 8080
-        targetPort: airflow-ui
-        nodePort: 30000
+    #ports:
+    #  - name: airflow-ui
+    #    port: 8080
+    #    targetPort: 8080
+    #    nodePort: 30000
 
 workers:
   persistence:
