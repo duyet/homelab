@@ -32,6 +32,8 @@ spec:
           hostnames: [dqsmart]
         - ip: 192.168.1.110
           hostnames: [duet-ubuntu]
+        - ip: 192.168.1.137
+          hostnames: [nini-iphone]
         - ip: 192.168.1.200
           hostnames: [bosch-dishwasher]
         - ip: 192.168.1.201
@@ -42,6 +44,8 @@ spec:
           hostnames: [duet-samsung-tv]
         - ip: 192.168.1.204
           hostnames: [duet-camera]
+        - ip: 192.168.1.205
+          hostnames: [dyson-formaldehyde-purifier]
       containers:
         - name: pihole
           # https://hub.docker.com/r/pihole/pihole/tags
