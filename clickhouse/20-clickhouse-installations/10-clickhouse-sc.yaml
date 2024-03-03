@@ -1,0 +1,11 @@
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: clickhouse-sc
+provisioner: microk8s.io/hostpath
+reclaimPolicy: Retain
+parameters:
+  pvDir: /media/duyet/Data/k8s-data/clickhouse
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true

@@ -1,6 +1,6 @@
 env:
   - name: CLICKHOUSE_HOST
-    value: http://clickhouse-single:8123
+    value: http://clickhouse-homelab:8123
   - name: CLICKHOUSE_USER
     value: monitoring
   - name: CLICKHOUSE_PASSWORD
@@ -12,7 +12,7 @@ service:
   portName: https
 
 ingress:
-  enabled: true
+  enabled: false
   className: tailscale
   hosts:
     - host: clickhouse-monitoring.homelab.duyet.net

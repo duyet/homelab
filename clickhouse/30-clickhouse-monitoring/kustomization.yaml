@@ -8,3 +8,6 @@ helmCharts:
     version: 0.1.1
     repo: https://duyet.github.io/charts
     valuesFile: values.yaml
+
+resources:
+  - ./10-clickhouse-monitoring-service-nodeport.yaml
