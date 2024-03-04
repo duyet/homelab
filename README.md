@@ -12,6 +12,47 @@ Most of the configuration files and data schema are open and can be found in the
   </tr>
 </table>
 
+```mermaid
+graph TB;
+	duyet((duyet))
+	duyet -- 192.168.1.110:30000 --> webserver
+	duyet -- 192.168.1.110:30001 --> clickhouse_monitoring
+	duyet -- 192.168.1.110:8123, 192.168.1.110:9000 --> clickhouse_homelab
+	duyet -- 192.168.1.110:80 --> pihole
+
+    subgraph "microk8s"
+        subgraph "namespace: airflow"
+            postgres[(postgres)]
+            webserver <-.-> postgres <-.-> scheduler -.- redis -.-> worker
+            postgres <-.-> worker
+            postgres <-.-> triggerer
+        end
+
+        subgraph "namespace: clickhouse"
+	        direction LR
+	        clickhouse_operator --> clickhouse_operator
+            clickhouse_operator -.- provisioning -.-> clickhouse_homelab
+            clickhouse_homelab[(clickhouse_homelab)]
+            clickhouse_monitoring --> clickhouse_homelab
+        end
+
+        subgraph "namespace: pihole"
+            pihole
+        end
+
+        subgraph "namespace: tailscale"
+            tailscale_operator
+            tailscale_operator -.-> airflow[proxy-airflow]
+            tailscale_operator -.-> clickhouse[proxy-clickhouse]
+            tailscale_operator -.-> etc[...]
+        end
+
+        subgraph "namespace: kubeseal"
+            sealed_secret_controller
+        end
+    end;
+```
+
 # How to run
 
 Apply the setup script to install the services on each Kubernetes namespace.
