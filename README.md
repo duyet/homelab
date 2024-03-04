@@ -47,6 +47,27 @@ $ ./apply.sh --delete
 
 # Notes
 
+### Kubeseal
+
+Kubeseal is using for encrypting the secrets. See more details at https://github.com/bitnami-labs/sealed-secrets
+
+Must install the Sealed Secret Controller first:
+
+```bash
+cd ./kubeseal
+./apply.sh
+```
+
+Add/update a secret:
+
+```bash
+./_helpers.sh kubeseal_secret_create <secret_name> <key> <value> <file>
+
+# Example add/update clickhouse password for user "duyet"
+./_helpers.sh kubeseal_secret_create clickhouse-password duyet ahihi123 ./clickhouse/20-clickhouse-installations/40-clickhouse-password-secret.yaml
+```
+
+
 ### Tailscale
 
 Tailscale is using for expose the services to your personal network. See more details at https://tailscale.com/use-cases/homelab/.
@@ -96,6 +117,10 @@ Most of the PV using hostPath storageClass pointing to `/media/duyet/Data/k8s-da
 See: [./airflow/10-postgres/10-postgres-airflow-sc.yaml](./airflow/10-postgres/10-postgres-airflow-sc.yaml)
 
 Access the Airflow Webserver using NodeIP: http://localhost:30000
+
+### ClickHouse
+
+TBU
 
 # License
 

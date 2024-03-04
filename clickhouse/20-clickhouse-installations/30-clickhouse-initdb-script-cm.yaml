@@ -6,7 +6,7 @@ data:
   01_create_databases.sh: |
     #!/bin/bash
     set -e
-    clickhouse client --password default -n <<-EOSQL
+    clickhouse client --password $CLICKHOUSE_INITDB_USER_PASSWORD -n <<-EOSQL
       CREATE DATABASE IF NOT EXISTS homelab;
       CREATE DATABASE IF NOT EXISTS analytics;
     EOSQL
@@ -14,6 +14,6 @@ data:
   02_create_table.sh: |
     #!/bin/bash
     set -e
-    clickhouse client --password default -n <<-EOSQL
+    clickhouse client --password $CLICKHOUSE_INITDB_USER_PASSWORD -n <<-EOSQL
       CREATE TABLE IF NOT EXISTS homelab.logs (level LowCardinality(String), message String, event_datetime DateTime) ENGINE = ReplacingMergeTree() ORDER BY (event_datetime);
     EOSQL

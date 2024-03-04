@@ -1,10 +1,18 @@
+image:
+  repository: ghcr.io/duyet/clickhouse-monitoring
+  tag: main
+  pullPolicy: Always
+
 env:
   - name: CLICKHOUSE_HOST
     value: http://clickhouse-homelab:8123
   - name: CLICKHOUSE_USER
     value: monitoring
   - name: CLICKHOUSE_PASSWORD
-    value: monitoring
+    valueFrom:
+      secretKeyRef:
+        name: clickhouse-password
+        key: monitoring
 
 service:
   type: ClusterIP

@@ -1,0 +1,6 @@
+# https://github.com/duyet/charts/blob/master/scheduling-restart/values.yaml
+
+restarts:
+  - deployment/clickhouse-monitoring
+
+schedule: "@daily"

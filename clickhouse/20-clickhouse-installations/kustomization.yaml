@@ -4,3 +4,4 @@ resources:
   - ./10-clickhouse-sc.yaml
   - ./20-clickhouse-cluster-homelab.yaml
   - ./30-clickhouse-initdb-script-cm.yaml
+  - ./40-clickhouse-password-secret.yaml

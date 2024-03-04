@@ -5,3 +5,4 @@ resources:
   - ./10-clickhouse-operator
   - ./20-clickhouse-installations
   - ./30-clickhouse-monitoring
+  - ./40-clickhouse-monitoring-daily-restart

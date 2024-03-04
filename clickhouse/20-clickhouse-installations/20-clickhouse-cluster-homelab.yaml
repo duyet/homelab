@@ -18,22 +18,33 @@ spec:
           replicasCount: 1
 
     users:
-      default/password_sha256_hex: 37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f
+      # HOW TO ADD NEW PASSWORD
+      # cd clickhouse/20-clickhouse-installations
+      # ../../_helpers.sh kubeseal_secret_create clickhouse-password <user> <password> 40-clickhouse-password-secret.yaml
+
+      # User: default
+      default/k8s_secret_password: clickhouse-password/default
       default/networks/ip:
         - 0.0.0.0/0
 
-      duyet/password_sha256_hex: a6d8a792566027f491147d7a93c82e414415ce964c67b9d7d5c0f41dc6076d7f
+      # User: duyet
+      duyet/k8s_secret_password: clickhouse-password/duyet
       duyet/networks/ip:
         - 0.0.0.0/0
 
+      # User: monitoring
+      monitoring/k8s_secret_password: clickhouse-password/monitoring
       monitoring/profile: readonly
-      monitoring/password_sha256_hex: 14a2326b6bb54f4045dad6bee6f667f64f143e354a6aa77f4bdb5f6ed19ca167
       monitoring/networks/ip:
         - 10.1.0.0/16
 
     profiles:
       # Read data and Change settings queries are allowed
       readonly/readonly: '2'
+
+    settings:
+      compression/case/method: zstd
+      disable_internal_dns_cache: 1
 
   templates:
     podTemplates:
@@ -47,6 +58,11 @@ spec:
               env:
                 - name: CLICKHOUSE_ALWAYS_RUN_INITDB_SCRIPTS
                   value: 'true'
+                - name: CLICKHOUSE_INITDB_USER_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: clickhouse-password
+                      key: default
               volumeMounts:
                 - name: clickhouse-initdb-script
                   mountPath: /docker-entrypoint-initdb.d
