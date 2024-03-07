@@ -13,7 +13,7 @@ Most of the configuration files and data schema are open and can be found in the
 </table>
 
 ```mermaid
-graph TB;
+flowchart LR;
 	duyet((duyet))
 	duyet_via_tailscale((duyet))
 	router{{router}}
@@ -28,27 +28,29 @@ graph TB;
 	router -- 192.168.1.110:53 --> pihole
 
     subgraph "microk8s"
-	direction TB
         subgraph ns_airflow
+            direction TB
             postgres[(postgres)]
-            webserver <-.-> postgres <-.-> scheduler -.- redis -.-> worker
+            webserver <-.-> postgres <-.-> scheduler -. redis .-> worker
             postgres <-.-> worker
             postgres <-.-> triggerer
         end
 
         subgraph ns_clickhouse
-            direction LR
+            direction BT
             clickhouse_operator --> clickhouse_operator
-            clickhouse_operator -.- provisioning -.-> clickhouse_homelab
+            clickhouse_operator -. provisioning .-> clickhouse_homelab
             clickhouse_homelab[(clickhouse_homelab)]
             clickhouse_monitoring --> clickhouse_homelab
         end
 
         subgraph ns_pihole
+            direction TB
             pihole
         end
 
         subgraph ns_tailscale
+            direction TB
             tailscale_operator
             tailscale_operator -.-> airflow[proxy-airflow]
             tailscale_operator -.-> clickhouse[proxy-clickhouse]
