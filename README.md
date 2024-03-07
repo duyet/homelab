@@ -13,73 +13,85 @@ Most of the configuration files and data schema are open and can be found in the
 </table>
 
 ```mermaid
-graph TB;
+flowchart LR;
 	duyet((duyet))
+	duyet_via_tailscale((duyet))
+	router{{router}}
+
 	duyet -- 192.168.1.110:30000 --> webserver
 	duyet -- 192.168.1.110:30001 --> clickhouse_monitoring
-	duyet -- 192.168.1.110:8123, 192.168.1.110:9000 --> clickhouse_homelab
+	duyet -- 192.168.1.110:{8123, 9000} --> clickhouse_homelab
 	duyet -- 192.168.1.110:80 --> pihole
 
+	duyet_via_tailscale -- tailscale ip --> airflow[proxy-airflow] & clickhouse[proxy-clickhouse]
+
+	router -- 192.168.1.110:53 --> pihole
+
     subgraph "microk8s"
-        subgraph "namespace: airflow"
+        subgraph ns_airflow
+            direction TB
             postgres[(postgres)]
-            webserver <-.-> postgres <-.-> scheduler -.- redis -.-> worker
+            webserver <-.-> postgres <-.-> scheduler -. redis .-> worker
             postgres <-.-> worker
             postgres <-.-> triggerer
         end
 
-        subgraph "namespace: clickhouse"
-	        direction LR
-	        clickhouse_operator --> clickhouse_operator
-            clickhouse_operator -.- provisioning -.-> clickhouse_homelab
+        subgraph ns_clickhouse
+            direction BT
+            clickhouse_operator --> clickhouse_operator
+            clickhouse_operator -. provisioning .-> clickhouse_homelab
             clickhouse_homelab[(clickhouse_homelab)]
             clickhouse_monitoring --> clickhouse_homelab
         end
 
-        subgraph "namespace: pihole"
+        subgraph ns_pihole
+            direction TB
             pihole
         end
 
-        subgraph "namespace: tailscale"
+        subgraph ns_tailscale
+            direction TB
             tailscale_operator
             tailscale_operator -.-> airflow[proxy-airflow]
             tailscale_operator -.-> clickhouse[proxy-clickhouse]
             tailscale_operator -.-> etc[...]
         end
 
-        subgraph "namespace: kubeseal"
+        subgraph ns_kubeseal
             sealed_secret_controller
         end
     end;
 ```
 
-# How to run
+# How to use
 
-Apply the setup script to install the services on each Kubernetes namespace.
+1. Install microk8s to your server: https://microk8s.io/docs/install-alternatives
 
-```bash
-$ cd ./tailscale
-$ ./apply.sh
+2. Run setup `./apply.sh` script to install the services on each namespace.
 
-Context "microk8s" modified.
-Current namespace: tailscale
-namespace/tailscale created
-customresourcedefinition.apiextensions.k8s.io/connectors.tailscale.com created
-customresourcedefinition.apiextensions.k8s.io/proxyclasses.tailscale.com created
-serviceaccount/operator created
-serviceaccount/proxies created
-role.rbac.authorization.k8s.io/operator created
-role.rbac.authorization.k8s.io/proxies created
-clusterrole.rbac.authorization.k8s.io/tailscale-operator created
-rolebinding.rbac.authorization.k8s.io/operator created
-rolebinding.rbac.authorization.k8s.io/proxies created
-clusterrolebinding.rbac.authorization.k8s.io/tailscale-operator created
-secret/operator-oauth created
-deployment.apps/operator created
-ingressclass.networking.k8s.io/tailscale created
-```
+    ```bash
+    $ cd ./tailscale
+    $ ./apply.sh
 
-To delete services included the namespace, apply with `--delete` flag.
+    Context "microk8s" modified.
+    Current namespace: tailscale
+    namespace/tailscale created
+    customresourcedefinition.apiextensions.k8s.io/connectors.tailscale.com created
+    customresourcedefinition.apiextensions.k8s.io/proxyclasses.tailscale.com created
+    serviceaccount/operator created
+    serviceaccount/proxies created
+    role.rbac.authorization.k8s.io/operator created
+    role.rbac.authorization.k8s.io/proxies created
+    clusterrole.rbac.authorization.k8s.io/tailscale-operator created
+    rolebinding.rbac.authorization.k8s.io/operator created
+    rolebinding.rbac.authorization.k8s.io/proxies created
+    clusterrolebinding.rbac.authorization.k8s.io/tailscale-operator created
+    secret/operator-oauth created
+    deployment.apps/operator created
+    ingressclass.networking.k8s.io/tailscale created
+    ```
+
+Note that to delete services included the namespace, apply with `--delete` flag.
 
 ```bash
 $ cd ./tailscale
@@ -88,7 +100,10 @@ $ ./apply.sh --delete
 
 # Notes
 
-### Kubeseal
+<details>
+    <summary>
+        <strong>Kubeseal</strong>: one-way encrypted secrets.
+    </summary>
 
 Kubeseal is using for encrypting the secrets. See more details at https://github.com/bitnami-labs/sealed-secrets
 
@@ -108,8 +123,13 @@ Add/update a secret:
 ./_helpers.sh kubeseal_secret_create clickhouse-password duyet ahihi123 ./clickhouse/20-clickhouse-installations/40-clickhouse-password-secret.yaml
 ```
 
+</details>
 
-### Tailscale
+
+<details>
+    <summary>
+        <strong>Tailscale</strong>: a private network for homelab.
+    </summary>
 
 Tailscale is using for expose the services to your personal network. See more details at https://tailscale.com/use-cases/homelab/.
 
@@ -135,7 +155,15 @@ cd ./tailscale
 ./apply.sh
 ```
 
-### PiHole
+</details>
+
+
+<details>
+    <summary>
+        <strong>Pihole</strong>: Network-level ads blocking and home network statistics.
+    </summary>
+
+![Pihole](./.github/screenshot/pihole.png)
 
 I don't use DHCP service from PiHole, so you might need to assign the IP to host name manually for your devices to display in the UI.
 
@@ -151,7 +179,12 @@ Update the `hostAliases` in [pihole/40-statefulset.yaml](./pihole/40-statefulset
 
 The password to access the web UI is `123123` as the `WEBPASSWORD` variable.
 
-### Airflow
+</details>
+
+<details>
+    <summary>
+        <strong>Airflow</strong>: schedule and monitor workflows.
+    </summary>
 
 Most of the PV using hostPath storageClass pointing to `/media/duyet/Data/k8s-data` so you might need to change it to your own path.
 
@@ -159,9 +192,20 @@ See: [./airflow/10-postgres/10-postgres-airflow-sc.yaml](./airflow/10-postgres/1
 
 Access the Airflow Webserver using NodeIP: http://localhost:30000
 
-### ClickHouse
+</details>
 
-TBU
+<details>
+    <summary>
+        <strong>ClickHouse</strong>: is the fastest and most resource efficient open-source database for real-time apps and analytics.
+    </summary>
+
+![](https://github.com/duyet/clickhouse-monitoring/raw/main/.github/screenshots/screenshot_1.png)
+
+- Define ClickHouse cluster definition via `ClickHouseInstallation` resource. Example [./clickhouse/20-clickhouse-installations/20-clickhouse-cluster-homelab.yaml](./clickhouse/20-clickhouse-installations/20-clickhouse-cluster-homelab.yaml)
+- ClickHouse Monitoring (http://192.168.1.110:30001) is the UI for managing and monitoring a ClickHouse instance, currently supporting only one per cluster. If you have more than one, please deploy another instance of the web UI. Github: https://github.com/duyet/clickhouse-monitoring
+
+
+</details>
 
 # License
 
