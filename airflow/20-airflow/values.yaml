@@ -1,4 +1,8 @@
 config:
+  core:
+    dags_are_paused_at_creation: 'False'
+    test_connection: 'Enabled'
+
   webserver:
     expose_config: 'True'
 
@@ -27,7 +31,7 @@ rbac:
 
 # Airflow executor
 # One of: LocalExecutor, LocalKubernetesExecutor, CeleryExecutor, KubernetesExecutor, CeleryKubernetesExecutor
-executor: "KubernetesExecutor"
+executor: 'KubernetesExecutor'
 
 webserver:
   # Create initial user.
@@ -38,20 +42,20 @@ webserver:
     email: me@duyet.net
     firstName: Duyet
     lastName: Le
-    password: "123123"
+    password: '123123'
 
   # Access: http://duet-ubuntu:30000
   service:
     type: NodePort
     annotations:
-      tailscale.com/expose: "true"
-      tailscale.com/hostname: "airflow"
-      tailscale.com/tags: "tag:k8s,tag:minipc,tag:duet-ubuntu"
-    #ports:
-    #  - name: airflow-ui
-    #    port: 8080
-    #    targetPort: 8080
-    #    nodePort: 30000
+      tailscale.com/expose: 'true'
+      tailscale.com/hostname: 'airflow'
+      tailscale.com/tags: 'tag:k8s,tag:minipc,tag:duet-ubuntu'
+    ports:
+      - name: airflow-ui
+        port: 8080
+        targetPort: 8080
+        nodePort: 30000
 
 workers:
   persistence:
