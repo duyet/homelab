@@ -24,6 +24,8 @@ spec:
           - 1.0.0.1
       # Assign IP address to the device name.
       hostAliases:
+        - ip: 10.1.83.55
+          hostnames: [home-assistant]
         - ip: 192.168.1.67
           hostnames: [nini-iphone]
         - ip: 192.168.1.68
