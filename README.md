@@ -192,7 +192,9 @@ See: [./airflow/10-postgres/10-postgres-airflow-sc.yaml](./airflow/10-postgres/1
 
 Access the Airflow Webserver using NodeIP: http://localhost:30000
 
-</details>
+I am not using the **Airflow Connection** and **Airflow Variable** feature as need to manage it database.
+
+</etails>
 
 <details>
     <summary>
