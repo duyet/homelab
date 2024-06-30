@@ -5,7 +5,7 @@ helmCharts:
   - name: clickhouse-monitoring
     includeCRDs: true
     releaseName: clickhouse-monitoring
-    version: 0.1.1
+    version: 0.1.2
     repo: https://duyet.github.io/charts
     valuesFile: values.yaml
 
