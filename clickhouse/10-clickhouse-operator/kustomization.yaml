@@ -5,7 +5,7 @@ helmCharts:
   - name: altinity-clickhouse-operator 
     includeCRDs: true
     releaseName: clickhouse-operator
-    version: 0.23.3
+    version: 0.24.0
     repo: https://docs.altinity.com/clickhouse-operator/
 
     valuesInline:
