@@ -8,7 +8,7 @@ resources:
 helmCharts:
   - name: postgresql
     releaseName: postgres-airflow
-    version: 14.2.3
+    version: 14.3.3
     repo: https://charts.bitnami.com/bitnami
 
     valuesInline:
