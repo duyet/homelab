@@ -8,7 +8,16 @@ source "$DIR/../_helpers.sh"
 
 create_namespace $NAMESPACE
 
-helm upgrade --install "$RELEASE" "$DIR/charts/tikduni" \
+# Chart lives in the tikduni app repo — clone or adjust path as needed
+CHART_DIR="${TIKDUNI_CHART_DIR:-$HOME/project/tiktok-automation/charts/tikduni}"
+
+if [ ! -d "$CHART_DIR" ]; then
+  echo "Chart not found at $CHART_DIR"
+  echo "Set TIKDUNI_CHART_DIR or clone: git clone git@github.com:duyet/tikduni.git ~/project/tiktok-automation"
+  exit 1
+fi
+
+helm upgrade --install "$RELEASE" "$CHART_DIR" \
   --namespace "$NAMESPACE" \
   --values "$DIR/values-homelab.yaml" \
   "$@"
