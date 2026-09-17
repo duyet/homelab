@@ -5,6 +5,6 @@ helmCharts:
   - name: scheduling-restart
     includeCRDs: true
     releaseName: scheduling-restart
-    version: 0.1.0
+    version: 0.1.1
     repo: https://duyet.github.io/charts
     valuesFile: values.yaml
